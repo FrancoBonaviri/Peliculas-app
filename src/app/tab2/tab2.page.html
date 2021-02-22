@@ -1,0 +1,59 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title class="ion-text-center">
+      Buscar Pelicula
+    </ion-title>
+    <!-- <ion-buttons slot="end">
+      <ion-button (click)="levantarModalBusqueda()">
+        <ion-icon slot="icon-only" name="list-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons> -->
+  </ion-toolbar>
+</ion-header>
+
+<ion-toolbar>
+  <ion-searchbar placeholder="Buscar Pelicula" (ionChange)="Buscar($event)" [debounce]="700" animated [value]="textoBuscar"></ion-searchbar>
+</ion-toolbar>
+
+<ion-content>
+
+
+  <ion-grid fixed *ngIf="buscando"> 
+    <ion-row>
+      <ion-col class="ion-text-center">
+        <ion-spinner name="crescent"></ion-spinner>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+
+
+  <ion-list *ngIf="peliculas.length === 0 && !buscando">
+    <ion-item *ngFor="let idea of ideas" (click)="textoBuscar = idea">
+      <ion-label  color="primary">{{ idea }}</ion-label>
+    </ion-item>
+  </ion-list>
+
+
+  <ion-grid fixed>
+    <ion-row>
+      <ion-col size="6" *ngFor="let pelicula of peliculas">
+        <ion-card (click)="levantarModal( pelicula.id )">
+          <img [src]="pelicula.poster_path | imagen" *ngIf="pelicula.poster_path">
+          <img [src]="pelicula.poster_path | imagen" *ngIf="!pelicula.poster_path">
+          <ion-card-header>
+            <ion-card-subtitle>{{ pelicula.release_date }}</ion-card-subtitle>
+            <ion-card-title class="card-title">{{ pelicula.title }}</ion-card-title>
+          </ion-card-header>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+
+  <ion-infinite-scroll threshold="50px" (ionInfinite)="loadData($event)">
+    <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more data...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+ 
+</ion-content>
